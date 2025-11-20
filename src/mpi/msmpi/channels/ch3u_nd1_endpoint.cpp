@@ -1693,7 +1693,7 @@ CEndpoint::BindMw(
         return MPIU_E_ERR( "**ch3|nd|bind %x", hr );
     }
 
-    m_MwList.push_back( *pMw.detach() );
+    m_MwList.push_back( pMw.detach() );
 
     //
     // Take a reference for the duration of the bind.
@@ -1744,7 +1744,7 @@ int CEndpoint::InvalidateMw()
 
     CMw* pMw = &m_MwList.front();
     m_MwList.pop_front();
-    m_MwInvalidatingList.push_back( *pMw );
+    m_MwInvalidatingList.push_back( pMw );
 
     HRESULT hr = m_pIEndpoint->Invalidate( pMw->InvalidateResult(), pMw->IMw(), 0 );
     if( FAILED( hr ) )

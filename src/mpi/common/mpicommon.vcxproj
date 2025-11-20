@@ -78,8 +78,9 @@ if not %rc%==1 exit %rce% else exit 0</Command>
           Inputs="$(MPI_SRC_ROOT)\common\extracterrmsgs;$(MPI_SRC_ROOT)\common\errnames.txt"
           Outputs="$(O)\defmsg.h">
     <PropertyGroup>
-      <FileToSkip Condition="'$(BuildArchitecture)'=='amd64'">$(BaseIntermediateOutputPath)i386\errtest.c</FileToSkip>
-      <FileToSkip Condition="'$(BuildArchitecture)'=='i386'">$(BaseIntermediateOutputPath)amd64\errtest.c</FileToSkip>
+      <FileToSkip Condition="'$(BuildArchitecture)'=='amd64' Or '$(BuildArchitecture)'=='arm64'">$(BaseIntermediateOutputPath)i386\errtest.c</FileToSkip>
+      <FileToSkip Condition="'$(BuildArchitecture)'=='i386' Or '$(BuildArchitecture)'=='arm64'">$(BaseIntermediateOutputPath)amd64\errtest.c</FileToSkip>
+      <FileToSkip Condition="'$(BuildArchitecture)'=='i386' Or '$(BuildArchitecture)'=='amd64'">$(BaseIntermediateOutputPath)arm64\errtest.c</FileToSkip>
     </PropertyGroup>
     <ItemGroup>
       <DirectoriesToParse Include="$(MPI_SRC_ROOT)\common"/>

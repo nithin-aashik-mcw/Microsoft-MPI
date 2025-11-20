@@ -13,7 +13,11 @@
     <PropertyGroup Condition="'$(BuildArchitecture)'=='amd64'">
       <Fort_Flags>-fno-underscoring -D_WIN64 -D_AMD64_ -DAMD64</Fort_Flags>
     </PropertyGroup>
-    <Exec Command="$(GFORTRAN_BIN)\gfortran.exe -I$(MPI_INC_ROOT) -c %(ForCompile.Identity) $(Fort_Flags)  -o $(O)\%(ForCompile.FileName).obj" />
+    <PropertyGroup Condition="'$(BuildArchitecture)'=='arm64'">
+      <Fort_Flags>-fno-underscoring -D_WIN64 -D_ARM64_ -DARM64</Fort_Flags>
+    </PropertyGroup>
+    <Exec Command="if not exist $(O) mkdir $(O)"/>
+    <Exec Command='"$(LLVM_DIR)\bin\flang.exe" -I$(MPI_INC_ROOT) -c %(ForCompile.Identity) $(Fort_Flags)  -o $(O)\%(ForCompile.FileName).obj' />
     <ItemGroup>
       <Lib Condition="'$(ConfigurationType)'=='StaticLibrary'" Include="@(ForCompile->'$(O)\%(Filename).obj')" />
     </ItemGroup>

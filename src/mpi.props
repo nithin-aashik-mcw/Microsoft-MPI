@@ -62,6 +62,14 @@
       <Configuration>Release</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|arm64">
+      <Configuration>Release</Configuration>
+      <Platform>arm64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|arm64">
+      <Configuration>Debug</Configuration>
+      <Platform>arm64</Platform>
+    </ProjectConfiguration>
   </ItemGroup>
 
   <PropertyGroup Condition="'$(Configuration)'=='Debug'">
@@ -81,6 +89,13 @@
   <ItemDefinitionGroup Condition="'$(BuildArchitecture)'=='i386'" >
     <ClCompile>
       <PreprocessorDefinitions>_X86_=1;i386=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+
+  <ItemDefinitionGroup Condition="'$(BuildArchitecture)'=='arm64'" >
+    <ClCompile>
+      <PreprocessorDefinitions>_WIN64=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
   </ItemDefinitionGroup>
 
@@ -108,6 +123,7 @@
       </PreprocessorDefinitions>
       <AdditionalIncludeDirectories>
         %(AdditionalIncludeDirectories);
+        $(ND_DIR)\src\ndutil
       </AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>

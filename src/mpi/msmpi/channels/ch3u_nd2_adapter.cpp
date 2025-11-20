@@ -354,7 +354,7 @@ Adapter::GetAvailableCq(
         return MPIU_ERR_FAIL( mpi_errno );
     }
 
-    m_CqList.push_back( *pCq );
+    m_CqList.push_back( pCq );
     pCq->AddRef();
 
     *ppCq = pCq;

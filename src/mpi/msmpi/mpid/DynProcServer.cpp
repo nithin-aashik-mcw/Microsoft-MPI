@@ -669,7 +669,7 @@ DynProcServer::GetNewPort()
     }
 
     CS lock( m_PortLock );
-    m_portList.push_back( *pPort );
+    m_portList.push_back( pPort );
 
     return pPort;
 }
@@ -893,7 +893,7 @@ DynProcServer::DynConnReqHandler(
 
     MPIU_Assert( pPort != NULL );
 
-    pPort->m_connRequestQueue.push_back( *pConnReq );
+    pPort->m_connRequestQueue.push_back( pConnReq );
 
     pPort->DecrementPendingReqs();
 

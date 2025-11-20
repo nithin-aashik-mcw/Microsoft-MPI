@@ -573,7 +573,7 @@ int Environment::Arm()
 
 void Environment::InsertMr( __in Mr& mr )
 {
-    m_MrCache.push_front( mr );
+    m_MrCache.push_front( &mr );
     m_MrCacheSize += mr.GetLength();
     mr.AddRef();
 }
@@ -600,7 +600,7 @@ int Environment::CreateMr(
         if( i->Matches( adapter, pBuf, cbBuf ) )
         {
             m_MrCache.remove( *i );
-            m_MrCache.push_front( *i );
+            m_MrCache.push_front( &(*i));
             *ppMr = &*i;
             (*ppMr)->AddRef();
             return MPI_SUCCESS;
@@ -721,7 +721,7 @@ Environment::CreateAdapter(
         return MPIU_ERR_FAIL( mpi_errno );
     }
 
-    m_AdapterList.push_front( *pAdapter );
+    m_AdapterList.push_front( pAdapter );
     pAdapter->AddRef();
 
     *ppAdapter = pAdapter;

@@ -460,7 +460,7 @@ int CEnvironment::Arm()
 
 void CEnvironment::InsertMr( __in CMr& Mr )
 {
-    m_MrCache.push_front( Mr );
+    m_MrCache.push_front( &Mr );
     m_MrCacheSize += Mr.GetLength();
     Mr.AddRef();
 }
@@ -487,7 +487,7 @@ int CEnvironment::CreateMr(
         if( i->Matches( pAdapter, pBuf, Length ) )
         {
             m_MrCache.remove( *i );
-            m_MrCache.push_front( *i );
+            m_MrCache.push_front( &(*i) );
             *ppMr = &*i;
             (*ppMr)->AddRef();
             return MPI_SUCCESS;
@@ -602,7 +602,7 @@ CEnvironment::CreateAdapter(
     if( mpi_errno != MPI_SUCCESS )
         return MPIU_ERR_FAIL( mpi_errno );
 
-    m_AdapterList.push_front( *pAdapter );
+    m_AdapterList.push_front( pAdapter );
     pAdapter->AddRef();
 
     *ppAdapter = pAdapter;

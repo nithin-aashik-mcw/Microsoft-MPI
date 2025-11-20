@@ -24,12 +24,13 @@
         $(MPI_SRC_ROOT)\msmpi\mpid;
         .\$(O)
       </AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
 
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <EntryPointSymbol Condition="'$(BuildArchitecture)'=='amd64'">_DllMainCRTStartup</EntryPointSymbol>
+      <EntryPointSymbol Condition="'$(BuildArchitecture)'=='amd64' Or '$(BuildArchitecture)'=='arm64'">_DllMainCRTStartup</EntryPointSymbol>
       <EntryPointSymbol Condition="'$(BuildArchitecture)'=='i386'">_DllMainCRTStartup@12</EntryPointSymbol>
       <AdditionalDependencies>
         %(AdditionalDependencies);
@@ -56,6 +57,8 @@
         $(OutDir)\..\pmilib\pmilib.lib;
         $(OutDir)\..\mpi_debugger\mpi_debugger.lib;
         $(CRT_Libs);
+        "$(LLVM_DIR)\lib\clang\$(LLVM_MAJOR_VERSION)\lib\windows\clang_rt.builtins-aarch64.lib";
+        "$(LLVM_DIR)\lib\clang\$(LLVM_MAJOR_VERSION)\lib\$(LLVM_TARGET)\flang_rt.runtime.static.lib";
       </AdditionalDependencies>
       <ModuleDefinitionFile>.\msmpi.def</ModuleDefinitionFile>
     </Link>
@@ -120,7 +123,10 @@ if not %rc%==1 exit %rce% else exit 0</Command>
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="NetworkDirect" Version="2.0.1" />
+    <ProjectReference Include="$(ND_DIR)\src\ndutil\ndutil.vcxproj">
+      <Name>NetworkDirect</Name>
+      <!--<SetConfiguration>Configuration=Release</SetConfiguration>-->
+    </ProjectReference>
   </ItemGroup>
 
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

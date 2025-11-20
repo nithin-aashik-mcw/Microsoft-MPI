@@ -47,24 +47,27 @@ Earlier versions of MS-MPI are available from the [Microsoft Download Center](ht
 
 ## Prerequisites
 
- - [Visial Studio 2017](https://docs.microsoft.com/visualstudio/install/install-visual-studio)
+ - [Visual Studio 2022](https://docs.microsoft.com/visualstudio/install/install-visual-studio)
 
    Please make sure to select the following workloads during installation:
-    - .NET desktop development (required for CBT/Nuget packages)
+    - .NET desktop development (required for Nuget packages)
     - Desktop development with C++ 
 
  - [Windows SDK](https://developer.microsoft.com/windows/downloads/windows-10-sdk)
  - [Windows WDK](https://docs.microsoft.com/windows-hardware/drivers/download-the-wdk)
- - [GFortran](http://mingw-w64.org/doku.php)
-    - Update _GFORTRAN_BIN_ in Derectory.Build.props to the install location of GFortran
+    - **Note:** SDK and WDK version must match, otherwise `mc.exe` may silently fail
+ - [LLVM](https://github.com/llvm/llvm-project/releases)
+    - Update _LLVM_DIR_ in Directory.Build.props to the install location of LLVM
+    - **Note:** LLVM Versions earlier than 21 are unsupported - this is due to file names for the flang runtime differing.
  - [Perl](https://www.perl.org/get.html#win32)
+    - **Note:** On ARM64 platforms, emulated x64 perl is fine, as it is only used as part of the build process
 
- Based on the installed VS/SDK/WDK versions, update _VCToolsVersion_ and _WindowsTargetPlatformVersion_ in Directory.Build.props
-
-Note that the build system uses [CommonBuildToolSet(CBT)](https://commonbuildtoolset.github.io/). You may need to unblock __CBT.core.dll__ (under .build/CBT) depending on your security configurations. Please refer to [CBT documentation](https://commonbuildtoolset.github.io/#/getting-started) for additional details.
+ Based on the installed VS/SDK/WDK versions, update _WindowsTargetPlatformVersion_ in Directory.Build.props
 
 
 ## Build
+Before building, update the path in the variable __ND_DIR__ to the clone directory of https://github.com/anthony-linaro/NetworkDirect
+
 To build, open a __Native Tools Command Prompt for Visual Studio__ and  run ``msbuild`` from root folder.
 
 # Contributing

@@ -25,6 +25,7 @@
           BeforeTargets="ClCompile"
           Inputs="..\$(BuildArchitecture).$(CallingConvention).alias"
           Outputs="$(O)\$(BuildArchitecture).$(CallingConvention).obj">
+    <Exec Command="if not exist $(O) mkdir $(O)"/>
     <Exec ConsoleToMsBuild="true" IgnoreExitCode="true" Command="cmd /c echo //empty file >$(O)\$(BuildArchitecture).$(CallingConvention).c"/>
     <!-- Call CL.exe directly without flags so that aliasobj is able to process the .obj file. -->
     <Exec ConsoleToMsBuild="true" IgnoreExitCode="true" Command="cmd /c $(CL_Exe) /Fo$(O)\$(BuildArchitecture).$(CallingConvention).obj -c $(O)\$(BuildArchitecture).$(CallingConvention).c"/>

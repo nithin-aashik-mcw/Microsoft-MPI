@@ -223,7 +223,7 @@ CAdapter::GetAvailableCq(
     if( mpi_errno != MPI_SUCCESS )
         return MPIU_ERR_FAIL( mpi_errno );
 
-    m_CqList.push_back( *pCq );
+    m_CqList.push_back( pCq );
     pCq->AddRef();
 
     *ppCq = pCq;
@@ -413,7 +413,7 @@ CAdapter::FreeMw(
         return;
     }
 
-    m_MwPool.push_front( *pMw );
+    m_MwPool.push_front( pMw );
     m_nMw++;
 }
 

@@ -50,13 +50,6 @@
   <PropertyGroup Condition=" '$(MSBuildProjectExtension)' != '.nuproj' And !Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.targets\ImportAfter\Microsoft.Common.NuProj.targets') ">
     <EnableNuProj_Common Condition=" '$(EnableNuProj_Common)' == '' ">true</EnableNuProj_Common>
   </PropertyGroup>  
-
-  <!--
-    Importing the "global" CBT build.props is what activates CBT.Core to restore modules.  You will want to set
-    properties before or after it depending on what you're injecting.  The "global" build.props will also import
-    files located in the $(CBTLocalPath) folder at certain points.
-  -->
-  <Import Project="$(EnlistmentRoot)\.build\CBT\build.props" />
   
   <!--
     The NuProjPath property allows .nuproj projects to build without having NuProj installed.
@@ -66,35 +59,6 @@
     <NuProjPath Condition=" '$(CBTModule_NuProj)' != '' And '$(NuProjPath)' == '' ">$(CBTModule_NuProj)\tools</NuProjPath>
     <!-- Whenever a project manually imports Directory.Build.props and it could be imported again by Microsoft.Common.props, you set ImportDirectoryBuildProps to false  -->
     <ImportDirectoryBuildProps>false</ImportDirectoryBuildProps>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <!-- The root folder to stage the outputs at -->
-    <StagingOutputRootPath>$(EnlistmentRoot)\out\$(Configuration)-$(Platform)\</StagingOutputRootPath>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <BuildArchitecture Condition="'$(Platform)'=='x64'">amd64</BuildArchitecture>
-    <BuildArchitecture Condition="'$(Platform)'=='x86'">i386</BuildArchitecture>
-    <OtherArchitecture Condition="'$(Platform)'=='x64'">i386</OtherArchitecture>
-    <OtherArchitecture Condition="'$(Platform)'=='x86'">amd64</OtherArchitecture>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <SrcRoot>$(EnlistmentRoot)/src</SrcRoot>
-
-    <MPI_INC_ROOT>$(SrcRoot)\include</MPI_INC_ROOT>
-    <MPI_INC_ARCH_ROOT Condition="'$(Platform)'=='x64'">$(MPI_INC_ROOT)\x64</MPI_INC_ARCH_ROOT>
-    <MPI_INC_ARCH_ROOT Condition="'$(Platform)'=='x86'">$(MPI_INC_ROOT)\x86</MPI_INC_ARCH_ROOT>
-    <MPI_INC_PATH>$(MPI_INC_ROOT);$(MPI_INC_ARCH_ROOT)</MPI_INC_PATH>
-    <MPI_SRC_ROOT>$(SrcRoot)\mpi</MPI_SRC_ROOT>
-
-    <MPI_DESTINATION>bin</MPI_DESTINATION>
-    <MPI_BIN_DESTINATION>$(MPI_DESTINATION)</MPI_BIN_DESTINATION>
-    <MPI_BIN_OUTPUT_DESTINATION>$(StagingOutputRootPath)\$(MPI_BIN_DESTINATION)</MPI_BIN_OUTPUT_DESTINATION>
-    <BinariesBuildTypeArchDirectory>$(StagingOutputRootPath)</BinariesBuildTypeArchDirectory>
-    <MPI_SDK_DESTINATION>$(MPI_DESTINATION)\sdk</MPI_SDK_DESTINATION>
-    <DEFAULT_STACKCOMMIT>0x2000</DEFAULT_STACKCOMMIT>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -109,14 +73,48 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <GFORTRAN_BIN>"C:\Program Files\mingw-w64\x86_64-8.1.0-posix-seh-rt_v6-rev0\mingw64\bin"</GFORTRAN_BIN>
+    <!-- The root folder to stage the outputs at -->
+    <StagingOutputRootPath>$(EnlistmentRoot)\out\$(Configuration)-$(Platform)\</StagingOutputRootPath>
+    <!-- Temporary property until NetworkDirect nuget package is available -->
+    <ShouldUnsetParentConfigurationAndPlatform>False</ShouldUnsetParentConfigurationAndPlatform>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <BuildArchitecture Condition="'$(Platform)'=='x64'">amd64</BuildArchitecture>
+    <BuildArchitecture Condition="'$(Platform)'=='x86'">i386</BuildArchitecture>
+    <BuildArchitecture Condition="'$(Platform)'=='arm64'">arm64</BuildArchitecture>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <SrcRoot>$(EnlistmentRoot)/src</SrcRoot>
+
+    <MPI_INC_ROOT>$(SrcRoot)\include</MPI_INC_ROOT>
+    <MPI_INC_ARCH_ROOT Condition="'$(Platform)'=='x64'">$(MPI_INC_ROOT)\x64</MPI_INC_ARCH_ROOT>
+    <MPI_INC_ARCH_ROOT Condition="'$(Platform)'=='x86'">$(MPI_INC_ROOT)\x86</MPI_INC_ARCH_ROOT>
+    <MPI_INC_ARCH_ROOT Condition="'$(Platform)'=='arm64'">$(MPI_INC_ROOT)\arm64</MPI_INC_ARCH_ROOT>
+    <MPI_INC_PATH>$(MPI_INC_ROOT);$(MPI_INC_ARCH_ROOT)</MPI_INC_PATH>
+    <MPI_SRC_ROOT>$(SrcRoot)\mpi</MPI_SRC_ROOT>
+
+    <MPI_DESTINATION>bin</MPI_DESTINATION>
+    <MPI_BIN_DESTINATION>$(MPI_DESTINATION)</MPI_BIN_DESTINATION>
+    <MPI_BIN_OUTPUT_DESTINATION>$(StagingOutputRootPath)\$(MPI_BIN_DESTINATION)</MPI_BIN_OUTPUT_DESTINATION>
+    <BinariesBuildTypeArchDirectory>$(StagingOutputRootPath)</BinariesBuildTypeArchDirectory>
+    <MPI_SDK_DESTINATION>$(MPI_DESTINATION)\sdk</MPI_SDK_DESTINATION>
+    <DEFAULT_STACKCOMMIT>0x2000</DEFAULT_STACKCOMMIT>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <LLVM_DIR>C:\Program Files\LLVM</LLVM_DIR>
+    <LLVM_MAJOR_VERSION>21</LLVM_MAJOR_VERSION>
+    <LLVM_TARGET>x86_64-pc-windows-msvc</LLVM_TARGET>
+    <LLVM_TARGET Condition="'$(Platform)'=='arm64'">aarch64-pc-windows-msvc</LLVM_TARGET>
+    <ND_DIR>C:\WoA\networkdirect-arm64\</ND_DIR>
   </PropertyGroup>
 
   <PropertyGroup>
     <OutputPath>$(StagingOutputRootPath)$(MSBuildProjectName)\</OutputPath>
-    <VCToolsVersion>14.15.26726</VCToolsVersion>
-    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
-    <PlatformToolset>v141</PlatformToolset>
+    <WindowsTargetPlatformVersion>10.0.26100.0</WindowsTargetPlatformVersion>
+    <PlatformToolset>v143</PlatformToolset>
     <OutDir>$(OutputPath)</OutDir>
     <O>$(Platform)\$(Configuration)</O>
     <O Condition="'$(Platform)' == 'x86'">$(Configuration)</O>

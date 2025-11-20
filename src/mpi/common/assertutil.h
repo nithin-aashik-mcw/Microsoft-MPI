@@ -23,17 +23,29 @@
 //
 //
 
-#define InvariantAssert(exp_) \
-    ((!(exp_)) ? \
-        (__annotation(L"Debug", L"AssertFail", L#exp_), \
-         __int2c(), FALSE) : \
-        TRUE)
-
-#define InvariantAssertP( exp_ ) \
-    ((!(exp_) && IsDebuggerPresent()) ? \
-        (__annotation(L"Debug", L"PassiveAssertFail", L#exp_), \
-         __int2c(), FALSE) : \
-        TRUE)
+#if defined(_M_ARM64)
+    #define InvariantAssert(exp_) \
+        ((!(exp_)) ? \
+            (__annotation(L"Debug", L"AssertFail", L#exp_), \
+             __break(0xf001), FALSE) : \
+            TRUE)
+    #define InvariantAssertP( exp_ ) \
+        ((!(exp_) && IsDebuggerPresent()) ? \
+            (__annotation(L"Debug", L"PassiveAssertFail", L#exp_), \
+             __break(0xf001), FALSE) : \
+            TRUE)
+#else
+    #define InvariantAssert(exp_) \
+        ((!(exp_)) ? \
+            (__annotation(L"Debug", L"AssertFail", L#exp_), \
+             __int2c(), FALSE) : \
+            TRUE)
+    #define InvariantAssertP( exp_ ) \
+        ((!(exp_) && IsDebuggerPresent()) ? \
+            (__annotation(L"Debug", L"PassiveAssertFail", L#exp_), \
+             __int2c(), FALSE) : \
+            TRUE)
+#endif
 
 #if DBG
 #  define Assert(exp_)      __analysis_assume(exp_);InvariantAssert(exp_)
