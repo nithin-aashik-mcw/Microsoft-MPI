@@ -113,6 +113,7 @@ void MPIDI_CH3I_SHM_writev_rma(MPIDI_VC_t *vc, const MPID_IOV* iov, int iov_n, M
         && (fUseRma || !use_rma(nSrc))
         )
     {
+        MPID_READ_BARRIER();
         MPIDI_CH3I_SHM_Slot_t* s = shm_slot(shm, shm->send.index);
         const MPIDI_CH3I_SHM_Slot_t* o = shm_slot(shm, shm->recv.index);
         MPIU_Bsize_t nSize = shm_send_buffer_avail(shm, s, o);
@@ -257,6 +258,7 @@ int MPIDI_CH3I_SHM_read_progress(MPIDI_VC_t* vc, BOOL* pfProgress)
 next_slot:
         while(!shm_is_empty(shm))
         {
+            MPID_READ_BARRIER();
             MPIDI_CH3I_SHM_Slot_t* s = shm_slot(shm, shm->recv.index);
             pSrc = slot_recv_buffer(s) + vc->ch.shm.recv.slot_offset;
             nSrc = s->num_bytes - vc->ch.shm.recv.slot_offset;

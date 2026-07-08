@@ -30,6 +30,20 @@ void _WriteBarrier(void);
 }
 #endif
 
+#if defined(_M_ARM64) || defined(_M_ARM64EC)
+
+#define MPID_WRITE_BARRIER()      __dmb(_ARM64_BARRIER_ST)
+#define MPID_READ_BARRIER()       __dmb(_ARM64_BARRIER_LD)
+#define MPID_READ_WRITE_BARRIER() __dmb(_ARM64_BARRIER_SY)
+
+#elif defined(_M_ARM)
+
+#define MPID_WRITE_BARRIER()      __dmb(_ARM_BARRIER_ST)
+#define MPID_READ_BARRIER()       __dmb(_ARM_BARRIER_LD)
+#define MPID_READ_WRITE_BARRIER() __dmb(_ARM_BARRIER_SY)
+
+#elif defined(_M_X64) || defined(_M_IX86)
+
 #pragma intrinsic(_ReadBarrier)
 #pragma intrinsic(_ReadWriteBarrier)
 #pragma intrinsic(_WriteBarrier)
@@ -38,6 +52,10 @@ void _WriteBarrier(void);
 #define MPID_WRITE_BARRIER() _WriteBarrier()
 #define MPID_READ_BARRIER() _ReadBarrier()
 #define MPID_READ_WRITE_BARRIER() MemoryBarrier()
+
+#else
+#error Unsupported architecture
+#endif
 
 //
 // Set the minimum slot size to be cache aligned
